@@ -1,0 +1,733 @@
+{% load static %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Your digital partner">
+    <meta name="author" content="mark">
+    <meta name="developer" content="exarth.com">
+    <meta name="org-name" content="exarth"/>
+
+    <link rel="icon" href="{% static 'core/images/logos/favico.ico' %}">
+
+
+
+    <style>
+        .icon-wrapper .bx {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+    .circle-container {
+        width: 300px; /* Set the width and height to the same value */
+        height: 300px; /* Set the width and height to the same value */
+        min-width: 100px; /* Set a minimum width */
+        min-height: 100px; /* Set a minimum height */
+        max-width: 300px; /* Set a maximum width */
+        max-height: 300px; /* Set a maximum height */
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        background-image: url("{% static 'core/circle.png' %}");
+        background-size: cover;
+        background-position: center;
+    }
+
+    .rectangle-container {
+        width: 300px;
+        height: 200px;
+        min-width: 100px; /* Set a minimum width */
+        min-height: 100px; /* Set a minimum height */
+        max-width: 300px; /* Set a maximum width */
+        max-height: 200px; /* Set a maximum height */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        background-image: url("{% static 'core/rectangle1.png' %}");
+        background-size: 180% auto; /* Increase the size of the background image */
+        background-position: center;
+
+    }
+
+    .guest {
+        background-color: #837f7f;
+        padding: 5px;
+        margin: 5px;
+        cursor: move;
+        color: #f8f8f8;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+    }
+
+    .guest::before {
+        content: "\f007";
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        margin-right: 5px;
+    }
+
+.boxes {
+    background-image: url("{% static 'core/boxes.png' %}");
+    background-repeat: repeat;
+        background-size: 4%; /* You can adjust the percentage as needed */
+
+}
+#h_size{
+max-height: 2000px;
+min-height: 2000px;
+overflow-x: auto;
+overflow-y: auto;
+}
+ @keyframes zoomIn {
+            from {
+                transform: scale(0);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+
+        /* Apply the animation to the modal dialog */
+        .modal-dialog.zoomIn {
+            animation: zoomIn 0.2s ease-in-out;
+        }
+
+.custom-drag-helper {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #ffffff;
+    padding: 5px;
+    border-radius: 5px;
+    z-index: 1000;
+    font-size: 14px;
+    pointer-events: none; /* Prevent the ghost element from intercepting mouse events */
+}
+</style>
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    >
+    <link rel="stylesheet" href="{% static 'core/css/design-web.css' %}">
+    <link rel="stylesheet" href="{% static 'core/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'core/css/icons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'core/css/app.min.css' %}">
+    <link rel="stylesheet" href="{% static 'core/css/custom-css.css' %}">
+
+</head>
+<body data-topbar="dark" data-layout-mode="light" class="">
+
+{# OUR CODE START ========================================================================== #}
+
+<div aria-hidden="true" aria-labelledby="GuestGroupModelLabel" class="modal fade" id="GuestGroupModal" role="dialog"
+     tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered zoomIn" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="GuestGroupModelLabel">Add Provider</h5>
+                  <button type="button" class="close btn" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">×</span></button>
+            </div>
+            <div class="ml-3">
+                <div class="create_modal_errors">
+
+                </div>
+
+            </div>
+            <!-- Add 'id' attribute to the form element -->
+            <form id="provider-form">
+                {% csrf_token %}
+                {% crispy form %}
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+                        <button class="btn btn-primary" id="save-provider" type="submit">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="layout-">
+
+    <div class="row float-nav" style="position: fixed; top: 0;width: 100%;background-color: #f8f8fb;">
+        <div class="col-6" style="text-align: left;">
+            <a href="/"><img src="{{ logo }}" height="50"></a>
+        </div>
+        <div class="col-6 mt-3" style="text-align: right;">
+            <img id="vertical-menu-btn" src="{% static 'website/menu.png' %}" height="20">
+        </div>
+    </div>
+
+
+    <!-- ========== Left Sidebar Start ========== -->
+    <div class="vertical-menu" style="top: 0px;width: 300px;z-index: 10000">
+
+        <div data-simplebar="init" class="h-100">
+            <div class="simplebar-wrapper " style="margin: 0px;">
+                <div class="simplebar-height-auto-observer-wrapper">
+                    <div class="simplebar-height-auto-observer"></div>
+                </div>
+                <div class="simplebar-mask">
+                    <div class="simplebar-offset" style="right: -17px; bottom: 0px;">
+                        <div class="simplebar-content-wrapper flex-container"
+                             style="height: 100%; overflow: hidden scroll;">
+
+                            {# CHAT NAV #}
+                            <div class="simplebar-content" style="padding: 0px;">
+
+                                <div id="sidebar-menu" class="mm-active">
+
+                                    {# NAV: TOP: INTRO #}
+                                    <div class="px-3">
+                                        <div>
+
+                                        <img id="vertical-menu-btn" src="{{ logo }}" height="40">
+                                        </div>
+                                        <div class="mt-4">
+                                            <button style="box-shadow: 1px 5px lightblue;width: 100%;"
+                                                    class="btn btn-lg btn-primary btn-rounded update-button"
+                                                    >+ Add Table
+                                            </button>
+                                        </div>
+                                    </div>
+
+
+                                    {# NAV: MID: LINKS #}
+                                <div class="mt-4">
+                                <ul class="metismenu list-unstyled" id="side-menu">
+                                    <li>
+                                        <div class="list-group list-group-light" style="overflow-x: hidden; overflow-y: scroll; max-height: 500px;">
+                                            {% for object in guests %}
+                                            <a aria-current="true"
+                                               class="list-group-item list-group-item-action px-3 border-1 m-1 ripple  draggable-guest"
+                                               data-guest-id="{{ object.id }}" data-object-id="{{ object.id }}" href="#">
+                                                <b><i class="fa fa-user text-success"></i> &nbsp;{{ object.guest_name }}</b>
+                                            </a>
+                                            {% endfor %}
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            </div>
+                                <div class="p-4">
+
+                                    <a href="{% url 'admins:seat-planner-list' %}" style="box-shadow: 1px 5px lightblue;width: 30%;"
+                                                    class="btn btn-lg btn-danger btn-rounded "
+                                                    >Close
+                                            </a>
+
+                                              <button style="box-shadow: 1px 5px lightblue;width: 50%;"
+                                                    class="btn btn-lg btn-success btn-rounded save-button "
+                                                    >Save
+                                            </button>
+
+                                </div>
+
+                            {# INFO NAV #}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="simplebar-placeholder" style="width: auto; height: 1237px;"></div>
+        </div>
+        <div class="simplebar-track simplebar-horizontal" style="visibility: hidden;">
+            <div class="simplebar-scrollbar" style="transform: translate3d(0px, 0px, 0px); display: none;"></div>
+        </div>
+        <div class="simplebar-track simplebar-vertical" style="visibility: visible;">
+            <div class="simplebar-scrollbar"
+                 style="height: 621px; transform: translate3d(0px, 0px, 0px); display: block;"></div>
+        </div>
+    </div>
+</div>
+<!-- Left Sidebar End -->
+
+
+<!-- ============================================================== -->
+<!-- Start right Content here -->
+<!-- ============================================================== -->
+
+<div class="main-content">
+    <div class="boxes" style="padding-left: 55px">
+
+        <div class="p-0 m-0 container-fluid first-section " id="h_size">
+
+            <div class="d-flex justify-content-center  ">
+            <div class="row">
+            <div class="col-6" id="tables">
+            </div>
+            </div>
+                <!-- Empty container for circle -->
+
+            </div>
+        </div>
+    </div>
+
+</div><!-- end main content-->
+</div>
+{# OUR CODE START ========================================================================== #}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="{% static 'core/libs/bootstrap/js/bootstrap.min.js' %}"></script>
+{#<script src="{% static 'core/libs/jquery/jquery.min.js' %}"></script>#}
+<script src="{% static 'core/libs/bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'core/libs/metismenu/metisMenu.min.js' %}"></script>
+<script src="{% static 'core/libs/simplebar/simplebar.min.js' %}"></script>
+<script src="{% static 'core/libs/node-waves/waves.min.js' %}"></script>
+
+<script src="{% static 'core/libs/owl.carousel/owl.carousel.min.js' %}"></script>
+<script src="{% static 'core/js/pages/ico-landing.init.js' %}"></script>
+<script src="{% static 'core/js/app.js' %}"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.13.0/Sortable.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+
+
+
+<script>
+
+function saveDataToLocalStorage() {
+    var containerData = [];
+
+    $('.draggable-container[id^="container_"]').each(function () {
+        var containerId = $(this).attr('id');
+        var containerPosition = $(this).position();
+        console.log("Container Position",containerPosition)
+        var guestData = [];
+        var containerType = $(this).find('.circle-container').length > 0 ? 'circle-container' : 'rectangle-container';
+        var tableName = $(this).find('h5 span:first').text();
+        var tableSize = $(this).find('h5 span:last').text();
+
+        $(this).find('.guest').each(function () {
+            var guestId = $(this).data('guest-id');
+            var guestName = $(this).text().trim();
+            guestData.push([guestId, guestName]);
+        });
+
+        containerData.push({
+            containerId: containerId,
+            containerType: containerType,
+            containerPosition: containerPosition,
+            guests: guestData,
+            tableName: tableName,
+            tableSize: tableSize
+        });
+    });
+
+    localStorage.setItem('seatingPlanData', JSON.stringify(containerData));
+}
+
+
+function saveRemainingGuestsToLocalStorage() {
+    var remainingGuests = [];
+
+    $('.list-group.list-group-light .draggable-guest').each(function () {
+        var guestId = $(this).data('guest-id');
+        var guestName = $(this).text(); // Get the guest name
+
+        // Only add the guest to remainingGuests if it's not in any container
+        if (!$(`.draggable-container .guest[data-guest-id="${guestId}"]`).length) {
+            remainingGuests.push({ id: guestId, name: guestName }); // Save both guest ID and name
+        }
+    });
+
+    localStorage.setItem('remainingGuests', JSON.stringify(remainingGuests));
+}
+
+function getGuestNameById(guestId) {
+    var guestName = ''; // Default guest name
+
+    // Iterate through the seatingPlanData to find the guest
+    seatingPlanData.forEach(function (containerInfo) {
+        containerInfo.guests.forEach(function (guestData) {
+            if (guestData[0] === guestId) {
+                guestName = guestData[1]; // Assign the guest name
+            }
+        });
+    });
+
+    return guestName;
+}
+
+    $(document).ready(function () {
+
+
+
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    // Check if the cookie name matches
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+          // Function to save data to local storage
+
+        function recoverDataFromLocalStorage() {
+            var seatingPlanData = localStorage.getItem('seatingPlanData');
+            if (seatingPlanData) {
+                seatingPlanData = JSON.parse(seatingPlanData);
+
+                seatingPlanData.forEach(function (containerInfo) {
+                    var containerId = containerInfo.containerId;
+                    var containerType = containerInfo.containerType;
+                    var containerPosition = containerInfo.containerPosition;
+                    var guests = containerInfo.guests;
+                    console.log(containerPosition.top)
+                    console.log(containerPosition.left)
+                    // Recreate the container element
+                    var containerHtml = `
+      <div class="draggable-container resizable-container" id="${containerId}" style="position: absolute; top: ${containerPosition.top}px; left: ${containerPosition.left}px;">
+<h5>Table Name: <span>${containerInfo.tableName}</span></h5>
+                            <h5>Table Size: <span>${containerInfo.tableSize}</span></h5>
+                            <button class="btn btn-outline-danger btn-sm delete-button btn-rounded delete-container"
+                                data-container-id="${containerId}"
+                                type="button"><i class="fa fa-trash"></i></button>
+                            <div class="${containerType}"></div>
+                        </div>
+                    `;
+                     if (containerType === "circle-container") {
+                                $('#tables').append(containerHtml);
+                            } else if (containerType === "rectangle-container") {
+                                $('#tables').append(containerHtml);
+                      }
+                               // Make the new container draggable
+                    $('#' + containerId).draggable();
+
+                    // Make the new container resizable
+                    $('#' + containerId).resizable();
+
+                    // Recreate the guests within the container
+               guests.forEach(function (guestData) {
+            var guestId = guestData[0];
+            var guestName = guestData[1]; // Guest name is already included in the guestData array
+
+            var guestElement = $('<div class="guest"></div>')
+                .text(guestName) // Set the guest name
+                .attr('data-guest-id', guestId);
+
+            $('.list-group.list-group-light').find(`[data-guest-id="${guestId}"]`).hide();
+            $('#' + containerId).find(`.${containerType}`).append(guestElement);
+        });
+
+
+                      $('#' + containerId).droppable({
+                        accept: '.draggable-guest',
+                        drop: function (event, ui) {
+                            var guestName = ui.helper.text();
+                            var guestId = ui.helper.data('object-id');
+                            var guestElement = $('<div class="guest"></div>')
+                                .text(guestName)
+                                .attr('data-guest-id', guestId); // Add data-guest-id attribute
+
+                            containerType = $(this).find('.circle-container, .rectangle-container').attr('class');
+                            var totalGuests = $(this).find('.guest').length;
+
+                            if (totalGuests.toString() === containerInfo.tableSize) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: `${tableName} Table Size is Full`,
+                                })
+                            } else {
+                                $(this).find('.circle-container, .rectangle-container').append(guestElement)
+                                ui.helper.hide();
+                                $('.list-group.list-group-light').find(`[data-guest-id="${guestId}"]`).hide();
+                    saveDataToLocalStorage()
+                    saveRemainingGuestsToLocalStorage()
+                    }
+
+                }
+            });
+
+
+
+                });
+            }
+        }
+
+            // Call the function to recover data from local storage and restore the state
+            recoverDataFromLocalStorage();
+
+
+         // Make the entire container draggable
+        $(document).on('mousedown', '.draggable-container', function() {
+                $(this).draggable({
+                    containment: "#h_size", // Change to a valid CSS selector or element ID
+                    drag: function(event, ui) {
+                 var position = ui.position;
+            var left = position.left;
+
+
+                        // Do something with the updated position values
+                        console.log("Updated Left: " + left);
+
+                             saveDataToLocalStorage()
+                            saveRemainingGuestsToLocalStorage()
+                    }
+                });
+            });
+
+        // Make the guest names draggable
+        $('.draggable-guest').draggable({
+            revert: 'invalid', // Revert back to the original position if not dropped in a container
+            helper: 'clone', // Create a clone of the dragged element
+            cursor: 'move' // Set the cursor style during dragging
+        });
+        var containerType;
+        var tableType = '';
+        var tableName = ''; // Variable to store the table name
+        // Make the containers droppable
+
+        // Handle save button click
+        $('#save-provider').click(function () {
+            // Get the values from the form
+            tableName = $('#id_table_name').val();
+            tableType = $('#id_table_type').val();
+            var tableSize = $('#id_seat_count').val();
+            // Check if the table name already exists
+
+            // Check if all fields are filled
+            if (tableName.trim() === '' || tableType.trim() === '' || tableSize.trim() === '') {
+                // Show an error message or perform any desired action
+                return;
+            }
+
+            // Create a unique ID for the new container
+            var containerId = 'container_' + Date.now();
+            // Create the HTML for the new container based on the table type
+            var containerHtml = '';
+
+            if (tableType === '1') {
+                containerHtml = `
+
+
+                <div class="  draggable-container resizable-container" id="${containerId}" style="position: absolute;">
+                    <h5 >Table Name: <span>${tableName}</span></h5>
+                    <h5 >Table Size: <span>${tableSize}</span></h5>
+                    <button class="btn btn-outline-danger btn-sm delete-button btn-rounded delete-container"
+                        data-container-id="${containerId}"
+                        type="button"><i class="fa fa-trash"></i></button>
+                    <div class="circle-container">
+                    </div>
+                </div>
+            `;
+            } else if (tableType === '2') {
+                containerHtml = `
+                <div class="draggable-container resizable-container" id="${containerId}" style="position: absolute;">
+                    <h5>Table Name: <span>${tableName}</span></h5>
+                    <h5>Table Size: <span>${tableSize}</span></h5>
+                    <button class="btn btn-outline-danger btn-sm delete-button btn-rounded delete-container"
+                        data-container-id="${containerId}"
+                        type="button"><i class="fa fa-trash"></i></button>
+                    <div class="rectangle-container"></div>
+                </div>
+            `;
+            }
+
+            // Append the new container to the respective parent container
+            if (tableType === '1') {
+                $('#tables').append(containerHtml);
+            } else if (tableType === '2') {
+                $('#tables').append(containerHtml);
+            }
+
+            // Make the new container draggable
+            $('#' + containerId).draggable();
+
+            // Make the new container resizable
+            $('#' + containerId).resizable();
+
+            // Make the new container droppable
+            $('#' + containerId).droppable({
+                accept: '.draggable-guest',
+                drop: function (event, ui) {
+                    var guestName = ui.helper.text();
+                    var guestId = ui.helper.data('object-id');
+                    var guestElement = $('<div class="guest"></div>')
+                        .text(guestName)
+                        .attr('data-guest-id', guestId); // Add data-guest-id attribute
+                    containerType = $(this).find('.circle-container, .rectangle-container').attr('class');
+                    var totalGuests = $(this).find('.guest').length;
+
+                    if (totalGuests.toString() === tableSize) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: `${tableName} Table Size is Full`,
+                        })
+                    } else {
+                        $(this).find('.circle-container, .rectangle-container').append(guestElement)
+                        ui.helper.hide();
+                        $('.list-group.list-group-light').find(`[data-guest-id="${guestId}"]`).hide();
+                        saveDataToLocalStorage()
+                        saveRemainingGuestsToLocalStorage()
+                    }
+
+                }
+            });
+            saveDataToLocalStorage()
+            // Close the modal
+            $('#GuestGroupModal').modal('hide');
+
+        });
+
+        // Handle opening the modal
+        $('.update-button').click(function () {
+            $('#GuestGroupModal').modal('show');
+        });
+
+
+        // Handle deleting the container
+        $(document).on('click', '.delete-container', function () {
+            var containerId = $(this).data('container-id');
+            var container = $('#' + containerId);
+            var guests = container.find('.guest');
+
+
+            // Hide the guests inside the container
+            guests.hide();
+
+            // Remove the container
+            container.remove();
+            saveDataToLocalStorage()
+            saveRemainingGuestsToLocalStorage()
+            // Show the hidden guests in the guest list
+            guests.each(function () {
+                var guestId = $(this).data('guest-id');
+                $('.list-group.list-group-light').find(`[data-object-id="${guestId}"]`).show();
+            });
+        });
+
+        $('.save-button').click(function () {
+            var containers = $('.draggable-container');
+            var containerRecords = [];
+            var error = false;
+            var inside = false;
+            var tabletype;
+            var tablename;
+
+            {#localStorage.removeItem('seatingPlanData');#}
+            {#localStorage.removeItem('remainingGuests');#}
+            containers.each(function () {
+                var containerId = $(this).attr('id');
+                var guests = $(this).find('.guest');
+                console.log("guest recod ", guests)
+                tablename = $(this).find('h5 span:first').text().trim();
+                var full = $(this).find('.circle-container, .rectangle-container').attr('class');
+                var tablesize = $(this).find('h5:nth-child(2) span').text().trim();
+                if (full === 'circle-container') {
+                    tabletype = 1;
+                } else if (full === 'rectangle-container') {
+                    tabletype = 2;
+                }
+                if (containerId !== 'circle_container' && containerId !== 'rectangle_container') {
+                    if (tablename && tabletype && tablesize) {
+                        inside = true
+                        var containerRecord = {
+                            'container_name': containerId,
+                            'guests': [],
+                            'table_name': tablename,
+                            'table_size': tablesize,
+                            'table_type': tabletype
+                        };
+                        guests.each(function () {
+                            var guestId = $(this).data('guest-id');
+                            containerRecord['guests'].push(guestId);
+                        });
+
+                        containerRecords.push(containerRecord);
+
+                        if (containerRecord['guests'].length === 0) {
+                            error = true;
+                        }
+                    }
+                }
+            });
+
+            if (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: `${tablename} Table is Empty`,
+                })
+            }
+            if (!error) {
+                // Get the CSRF token
+                const csrfToken = getCookie('csrftoken');
+
+                // Make the AJAX request
+                $.ajax({
+                    url: '/admins/seat-planner/create/api/',
+                    type: 'POST',
+                    data: JSON.stringify(containerRecords),
+                    contentType: 'application/json',
+                    beforeSend: function (xhr, settings) {
+                        // Include the CSRF token in the request headers
+                        if (csrfToken) {
+                            xhr.setRequestHeader('X-CSRFToken', csrfToken);
+                        }
+                    },
+                    success: function (response) {
+                        // Handle the success response from the backend
+                        console.log('Success:', response);
+                        window.location.href = '/admins/seat-planner/list/'; // Replace with the actual URL of the provider list page
+                    },
+                    error: function (xhr, status, error) {
+                        // Handle the error response from the backend
+                        console.log('Error:', error);
+                    }
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: ` Table is Empty`,
+                })
+            }
+
+        });
+    })
+    ;
+</script>
+{% include 'messages.html' %}
+
+{% block js %}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://unpkg.com/typed.js@2.0.16/dist/typed.umd.js"></script>
+{% endblock %}
+
+
+{% block js_code %}
+
+{% endblock %}
+
+</body>
+</html>
+
+

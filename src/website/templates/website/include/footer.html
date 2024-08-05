@@ -1,0 +1,48 @@
+{% load static %}
+    <footer class="footer pb-0 bg-black-111" id="footer">
+        <div class="container pb-20">
+            <div class="row multi-row-clearfix">
+                <div class="col-sm-6 col-md-4 wow fadeInUp animation-delay1">
+                    <div class="widget dark">
+                        <a class="text-white font-great-vibes font-32" href="/">{{ name }}</a>
+                        <p class="mt-20 mb-10">{{ description }}</p>
+                        <ul class="social-icons icon-dark icon-circled">
+{#                            <li><a href="#"><i class="fa fa-facebook"></i></a></li>#}
+{#                            <li><a href="#"><i class="fa fa-twitter"></i></a></li>#}
+{#                            <li><a href="#"><i class="fa fa-instagram"></i></a></li>#}
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-4 wow fadeInUp animation-delay2">
+                    <div class="widget dark">
+                        <h5 class="widget-title line-bottom">Pages</h5>
+                        <ul class="list-border list theme-colored angle-double-right">
+                            <li><a href="{% url 'website:privacy-policy' %}">Privacy Policy</a></li>
+                            <li><a href="{% url 'website:terms-and-conditions' %}">Terms of Use</a></li>
+                            <li><a href="{% url 'website:about' %}">About Us</a></li>
+                            <li><a href="{% url 'website:contact-us' %}">Contact Us</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-md-4 wow fadeInUp animation-delay4">
+                    <div class="widget dark">
+                        <h5 class="widget-title line-bottom">Quick Contact</h5>
+                        <ul class="list list-border">
+                            <li><a href="tel:{{ phone }}">{{ phone }}</a></li>
+                            <li><a href="mailto:{{ email }}">{{ email }}</a></li>
+                            <li><a class="lineheight-20" href="#">{{ address }}</a></li>
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-nav bg-black-222 p-20">
+            <div class="row text-center">
+                <div class="col-md-12">
+                    <p class="text-white font-11 m-0">Copyright &copy;2023 Bridetools. All Rights Reserved</p>
+                </div>
+            </div>
+        </div>
+    </footer>

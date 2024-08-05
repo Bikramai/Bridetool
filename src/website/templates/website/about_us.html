@@ -1,0 +1,94 @@
+{% extends 'website/base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- Start main-content -->
+<div class="main-content" style="overflow-x: hidden">
+  <!-- Section: inner-header -->
+  <section class="inner-header divider parallax layer-overlay overlay-dark-5">
+      {% if background.about_background %}
+          <img src="{{ background.about_background.url }}" style="height: 400px; width: inherit; object-fit: cover;" alt="Background Image">
+      {% else %}
+          <img src="{% static 'website/images/bg/bg11.jpg' %}" style="height: 400px; width: inherit; object-fit: cover;" alt="Default Background Image">
+      {% endif %}
+  
+  </section>
+
+
+    <!-- Section: About -->
+    <section>
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-12 col-md-5">
+            <h3 class="text-theme-colored mt-0">About Us</h3>
+            {% if about.short_description %}
+            {{about.short_description | safe}}
+            {% else %}
+            <p>Lorem ipsum dolor sit amet, consectet adipisicing elit. Quas, veniam nobis minima. Delectus, dolorem rerum, eos nemo dolore amet quis, eum debiti modi voluptatibus ducimus molestiae laborum itaque quam maxime dolor amit laboriosam aperiam exercitationem.Cos nemo dolore amet quis, eum debiti modi voluptatibus ducimus molestiae laborum itaque quam maxime dolor amit laboriosam aperiam exercitationem. Amit dolor sit.</p>
+            <div class="row mt-30 mb-30 ml-20">
+             <div class="col-xs-6">
+              <ul class="mt-10">
+                <li class="mb-10"><i class="fa fa-check-circle text-theme-colored"></i>&emsp;Family</li>
+                <li class="mb-10"><i class="fa fa-check-circle text-theme-colored"></i>&emsp;Community</li>
+                <li class="mb-10"><i class="fa fa-check-circle text-theme-colored"></i>&emsp;Shopping Local</li>
+              </ul>
+             </div>
+             <div class="col-xs-6">
+              <ul class="mt-10">
+                <li class="mb-10"><i class="fa fa-check-circle text-theme-colored"></i>&emsp;Great customer service</li>
+                <li class="mb-10"><i class="fa fa-check-circle text-theme-colored"></i>&emsp;Teamwork</li>
+                <li class="mb-10"><i class="fa fa-check-circle text-theme-colored"></i>&emsp;Creativity</li>
+              </ul>
+             </div>
+            </div>
+            <p>Lorem ipsum dolor sit amet, consectet adipisicing elit. Quas, veniam nobis minima. Delectus, dolorem rerum, eos nemo dolore amet quis,</p>
+            {% endif %}
+          </div>
+          
+          <div class="col-sm-12 col-md-7">
+            <div class="image-carousel owl-carousel">
+              {% if about.image_1 %}
+              <div class="item"><img alt="slide1" style="height: 500px; width: 800px; object-fit: cover;"
+                  src="{{about.image_1.url}}"></div>
+              {% else %}
+              <div class="item"><img alt="slide1"
+                  src="{% static 'website/images/photos/slide1.jpg' %}"></div>
+              {% endif %}
+              {% if about.image_2 %}
+              <div class="item"><img alt="slide1" style="height: 500px; width: 800px; object-fit: cover;"
+                  src="{{about.image_2.url}}"></div>
+              {% else %}
+              <div class="item"><img alt="slide2"
+                  src="{% static 'website/images/photos/slide2.jpg' %}"></div>
+              {% endif %}
+              {% if about.image_3 %}
+              <div class="item"><img alt="slide3" style="height: 500px; width: 800px; object-fit: cover;"
+                  src="{{about.image_3.url}}"></div>
+              {% else %}
+              <div class="item"><img alt="slide3"
+                                     src="{% static 'website/images/photos/slide3.jpg' %}"></div>
+              {% endif %}
+          </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- divider: Emergency Services -->
+    <section>
+      <div class="container">
+        <div class="section-content">
+          <div class="row">
+            <div class="col-md-12">
+              {{about.description | safe}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!--  service content  -->
+  </div>
+  <!-- end main-content -->
+
+{% endblock content %}

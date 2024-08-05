@@ -1,0 +1,514 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+{% block subtitle %} {{ request.user }} {% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col">
+            <div class="card mini-stats-wid">
+                <div class="card-body">
+                    <div class="media">
+                        <div class="mr-3 align-self-center">
+                            <i class="fa fa-group h2 text-primary mb-0"></i>
+                        </div>
+                        <div class="media-body">
+                            <p class="text-muted mb-2">Total Groups</p>
+                            <h5 class="mb-0">
+                                {{ total_group }}
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card mini-stats-wid">
+                <div class="card-body">
+                    <div class="media">
+                        <div class="mr-3 align-self-center">
+                            <i class="bx bx-import h2 text-success mb-0"></i>
+                        </div>
+                        <div class="media-body">
+                            <p class="text-muted mb-2">Total Payments</p>
+                            <h5 class="mb-0">
+                                $ {{ total_payment }} <span
+                                    class="font-size-14 text-muted"></span>
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card mini-stats-wid">
+                <div class="card-body">
+                    <div class="media">
+                        <div class="mr-3 align-self-center">
+                            <i class="bx bx-export h2 text-danger mb-0"></i>
+                        </div>
+                        <div class="media-body">
+                            <p class="text-muted mb-2">Total Paid</p>
+                            <h5 class="mb-0">
+                                $ {{ paid_payment }} <span
+                                    class="font-size-14 text-muted"></span>
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card mini-stats-wid">
+                <div class="card-body">
+                    <div class="media">
+                        <div class="mr-3 align-self-center">
+                            <i class="fa fa-calendar h2 text-primary mb-0"></i>
+                        </div>
+                        <div class="media-body">
+                            <p class="text-muted mb-2">Events</p>
+                            <h5 class="mb-0">
+                                 {{ total_events }} <span
+                                    class="font-size-14 text-muted"></span>
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card mini-stats-wid">
+                <div class="card-body">
+                    <div class="media">
+                        <div class="mr-3 align-self-center">
+                            <i class="bx bx-user-check h2 text-primary mb-0"></i>
+                        </div>
+                        <div class="media-body">
+                            <p class="text-muted mb-2">Providers</p>
+                            <h5 class="mb-0">
+                                 {{ total_provider }} <span
+                                    class="font-size-14 text-muted"></span>
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <hr>
+    <div class="row">
+
+
+        <div class="col-sm-4">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title mb-3"> Groups Statistics</h4>
+                    <div id="chart_year_months">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title mb-3">Table Statistics</h4>
+                    <div id="chart_table">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-4">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title mb-3"> Providers Statistics</h4>
+                    <div id="chart_provider">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="row">
+            <div class="col-sm-8">
+
+            <div class="card">
+                <div class="card-body">
+<div class="row">
+                        <div class="col-10">
+                            <h4 class="card-title mb-4">Latest Seats Added </h4>
+                        </div>
+                        <div class="col-2">
+                            <a href="{% url 'admins:seat-planner-list' %}"
+                               class="text-right btn btn-transparent btn-sm">View all</a>
+                        </div>
+                    </div>
+                    {% if recent_seats %}
+                        <div class="table-responsive">
+                            <table class="table table-hover table align-middle table-nowrap mb-0">
+                                <thead class="table-light">
+                                <tr>
+                                    <th scope="col" style="width: 100px">#</th>
+                                    <th scope="col">Table Name</th>
+                                    <th scope="col">Table Type</th>
+                                    <th scope="col">Total Guests</th>
+                                    <th scope="col">Total Seats</th>
+                                    <th scope="col">Seats Left</th>
+                                    <th scope="col">-</th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for object in recent_seats %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ object.table_name }}</td>
+                                        <td>{{ object.get_table_type_display }}</td>
+                                        <td>{{ object.guests.count }}</td>
+                                        <td>{{ object.seat_count }}</td>
+                                        <td>{{ object.seats_left }}</td>
+                                        <td>
+                                            <a class="btn btn-primary btn-sm btn-rounded"
+                                               href="{% url 'admins:seat-planner-detail' object.id %}"><i
+                                                    class="fa fa-eye"></i>&nbsp;view</a>
+
+
+
+                                        </td>
+
+                                    </tr>
+
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <span class="text-danger"><b>Tables not Found</b> </span>
+                    {% endif %}
+
+                </div>
+
+
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="card">
+                <div class="card-body">
+                <div class="row">
+                        <div class="col-9">
+                            <h4 class="card-title mb-4">Upcoming Events </h4>
+                        </div>
+                        <div class="col-3">
+                            <a href="{% url 'admins:seat-planner-list' %}"
+                               class="text-right btn btn-transparent btn-sm">View all</a>
+                        </div>
+                    </div>
+                {% if recent_events %}
+
+                    <ul class="verti-timeline list-unstyled">
+                    <hr>
+                        {% for recent in recent_events %}
+                            <li class="event-list">
+                                <div class="event-timeline-dot">
+                                    <i class="bx bx-right-arrow-circle font-size-18"></i>
+                                </div>
+                                <div class="d-flex">
+                                    <div class="flex-shrink-0 me-3">
+                                        <h5 class="font-size-14">{{ recent.date }} <i
+                                                class="bx bx-right-arrow-alt font-size-16 text-primary align-middle ms-2"></i>
+                                        </h5>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <div>
+                                            <h6>{{ recent.title }}</h6>{{ recent.description|truncatechars:50 }}
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        {% endfor %}
+
+                    </ul>
+                    <div class="text-center mt-4"><a href="{% url 'admins:event-timeline' %}"
+                                                     class="btn btn-primary waves-effect waves-light btn-sm">View More
+                        <i class="mdi mdi-arrow-right ms-1"></i></a></div>
+                {% else %}
+                    <span class="text-danger"><b>Events Not Found</b></span>
+                {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-10">
+                            <h4 class="card-title mb-4">Latest Groups Added </h4>
+                        </div>
+                        <div class="col-2">
+                            <a href="{% url 'admins:seat-planner-list' %}"
+                               class="text-right btn btn-transparent btn-sm">View all</a>
+                        </div>
+                    </div>
+                {% if recent_groups %}
+
+                    <div class="table-responsive">
+                        <table class="table align-middle table-nowrap mb-0">
+                            <thead class="table-light">
+                            <tr>
+
+                                <th class="align-middle">#ID</th>
+                                <th class="align-middle">Group Name</th>
+                                <th class="align-middle">Total Guests</th>
+                                <th class="align-middle">Invitation Letters</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for object in recent_groups %}
+                            <tr>
+
+                                <td><a href="javascript: void(0);" class="text-body fw-bold">#{{ forloop.counter }}</a></td>
+                                <td>{{ object.group_name }}</td>
+                                <td>
+                                    {{object.total_guests}}
+                                </td>
+                                <td>
+                                    {{object.invitation_set.total_invitation}}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                 {% else %}
+                    <span class="text-danger"><b>Groups Not Found</b></span>
+                {% endif  %}
+                    <!-- end table-responsive -->
+                </div>
+
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-10">
+                            <h4 class="card-title mb-4">Latest Providers Added </h4>
+                        </div>
+                        <div class="col-2">
+                            <a href="{% url 'admins:provider-list' %}"
+                               class="text-right btn btn-transparent btn-sm">View all</a>
+                        </div>
+
+                    </div>
+                    {% if recent_providers %}
+                        <div class="table-responsive">
+                            <table class="table table-hover table align-middle table-nowrap mb-0">
+
+                                <thead class="table-light">
+                                <tr>
+                                    <th scope="col" style="width: 100px">#</th>
+                                    <th class="align-middle"><i class="bx bxs-user"></i> Staff</th>
+                                    <th class="align-middle"><i class="fa fa-wrench"></i> Service</th>
+                                    <th class="align-middle"><i class="fa fa-envelope"></i> Email</th>
+                                    <th class="align-middle"><i class="fa fa-phone-alt"></i> Phone</th>
+                                    <th class="align-middle"><i class="fa fa-dollar text-success"></i> Total Cost</th>
+                                    <th class="align-middle"><i class="fa fa-arrow-alt-circle-down text-danger"></i>
+                                        Paid
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                {% for object in recent_providers %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td><a {% if object.link %} href="{{ object.link }}" target="_blank"
+                                                                    {% else %}href="#"{% endif %} > {{ object.provider_name }}</a>
+                                        </td>
+                                        <td>{{ object.service }}</td>
+                                        <td>{{ object.email }}</td>
+                                        <td>{{ object.phone_number }}</td>
+
+                                        <td>{{ object.total_cost }}</td>
+                                        <td>{{ object.paid }}</td>
+
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <span class="text-danger"><b>Providers Not Found</b></span>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+
+
+
+
+    </div>
+{% endblock %}
+
+
+{% block js %}
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+{% endblock %}
+
+{% block js_code %}
+    <script>
+        var options_overall = {
+            series: [{
+                data: [4, 3, 2, 1, 0, 0, 4, 1, 2]
+            }],
+            chart: {
+                type: 'bar',
+                height: 350
+            },
+            plotOptions: {
+                bar: {
+                    borderRadius: 4,
+                    horizontal: true
+
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            xaxis: {
+                categories: ['Total Groups', 'Total guests', 'Total Events', 'Total Providers', 'Total Payment ', 'Pending Payment', 'Paid Payment', 'Total tables',
+                    'Rounded Table', 'Circular Table'
+                ],
+            }
+        };
+
+        var options_year_months = {
+            series: [{{ total_group }}, {{ total_guests }}, {{ total_invitations }}],
+            chart: {
+                height: 205,
+                type: 'pie',
+            },
+            labels: ["Total Groups", "Total Guests", "Total Invitations"],
+            responsive: [{
+                breakpoint: 480,
+                options: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }],
+            tooltip: {
+                y: {
+                    formatter: function (value) {
+                        return value;
+                    }
+                }
+            }
+        };
+
+        var options_provider = {
+            series: [{{ total_provider|floatformat:0 }}, {{ total_payment|floatformat:0 }},
+                {{ paid_payment|floatformat:0 }}, {{ remaining_payment|floatformat:0 }}],
+            chart: {
+                height: 228,
+                type: 'radialBar',
+            },
+            plotOptions: {
+                radialBar: {
+                    dataLabels: {
+                        name: {
+                            fontSize: '22px',
+                        },
+                        value: {
+                            fontSize: '16px',
+                            formatter: function (val) {
+                                return parseInt(val); // Convert to integer
+                            },
+                        },
+                        total: {
+                            show: true,
+                            label: 'Total',
+                            formatter: function (w) {
+                                var totalValue = {{ total_provider|floatformat:0 }} +
+                                        {{ total_payment|floatformat:0 }} +
+                                        {{ paid_payment|floatformat:0 }} +
+                                    {{ remaining_payment|floatformat:0 }};
+                                return totalValue
+                            }
+                        }
+                    }
+                }
+            },
+
+
+            labels: ['Total Providers', 'Total Payments', 'Paid Payments', 'Remaining Payments'],
+
+
+
+        };
+        var option_table = {
+            series: [{{ total_table|floatformat:0 }}, {{ rounded|floatformat:0 }},
+                {{ rectangle|floatformat:0 }}],
+            chart: {
+                height: 204,
+                type: 'donut',
+            },
+            plotOptions: {
+                pie: {
+                    startAngle: -90,
+                    endAngle: 270
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            labels: ["Total Tables", "Circular Tables", "Rectangle Tables"],
+
+            fill: {
+                type: 'gradient',
+            },
+            legend: {
+                formatter: function (val, opts) {
+                    return val + " - " + opts.w.globals.series[opts.seriesIndex]
+                }
+            },
+
+            responsive: [{
+                breakpoint: 480,
+                options: {
+                    chart: {
+                        width: 200
+                    },
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }]
+        };
+
+
+        var chart_options_provider = new ApexCharts(document.querySelector("#chart_provider"), options_provider);
+        var chart_year_months = new ApexCharts(document.querySelector("#chart_year_months"), options_year_months);
+        var chart_overall = new ApexCharts(document.querySelector("#chart_overall"), options_overall);
+        var chart_table = new ApexCharts(document.querySelector("#chart_table"), option_table);
+
+        chart_year_months.render();
+        chart_overall.render();
+        chart_options_provider.render()
+        chart_table.render()
+
+    </script>
+{% endblock %}
+
+
+
